@@ -9,7 +9,7 @@ Usage: ssGSEA_quickstart.R [options]
 
 Options:
   -h --help                  Show this screen.
-  --matrix=<string>          Specify the path to your gct file.
+  --matrix=<string>          Specify the path to your gene expression matrix (counts, FPKM, etc).
   --gene_signature=<string>  Path to the gene signature(s).
   --verbose=<value>          If set to T prints all messages [default: F].
   --version   

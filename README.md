@@ -3,7 +3,7 @@ This is just a simple wrapper for the single sample method of the GSVA package. 
 
 Usage:
 
-Mesothelioma AI Pipeline - ssGSVA Experiments Wrapper
+ssGSVA Experiments Wrapper
 
 Usage: ssGSEA_quickstart.R [options]
 

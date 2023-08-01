@@ -48,10 +48,7 @@ prepareGSVAMatrix <- function(m){
          genes  = gene.symbols)
   )
 }
-
-#---- Package Installation ----
-pkgs <- c("GSVA", "here", "docopt", "GSEABase")
-handleRequirements(pkgs)
+library("docopt")
 
 #---- Header ----
 "Mesothelioma AI Pipeline - ssGSVA Experiments Wrapper
@@ -67,8 +64,12 @@ Options:
 "-> doc
 
 #---- Arguments ----
-arguments <- docopt(doc, quoted_args = TRUE, help = TRUE, version = 'ssGSVA Wrapper 1.0')
+arguments <- docopt(doc, quoted_args = TRUE, help = TRUE, version = 'ssGSVA Wrapper 1.0\n')
 print(arguments)
+
+#---- Package Installation ----
+pkgs <- c("GSVA", "here", "GSEABase")
+handleRequirements(pkgs)
 
 #------------------ Load dataset and parameters into R environment -------------
 

@@ -1,7 +1,6 @@
 # ssGSVA
 This is just a simple wrapper for the single sample method of the GSVA package. It offers a docopt header, so it can be run via the console. The packages should be automatically installed, if necessary please do install any other dependencies. <br>
 
-
 Usage: ssGSEA_quickstart.R [options] <br>
 
 Options: <br>

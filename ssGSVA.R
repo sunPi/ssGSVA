@@ -63,11 +63,11 @@ Options:
   --matrix=<string>          Specify the path to your gct file.
   --gene_signature=<string>  Path to the gene signature(s).
   --verbose=<value>          If set to T prints all messages [default: F].
-  --version                  
+  --version                  Show version.
 "-> doc
 
 #---- Arguments ----
-arguments <- docopt(doc, quoted_args = TRUE, help = TRUE)
+arguments <- docopt(doc, quoted_args = TRUE, help = TRUE, version = 'ssGSVA Wrapper 1.0')
 print(arguments)
 
 #------------------ Load dataset and parameters into R environment -------------

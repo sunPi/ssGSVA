@@ -72,7 +72,6 @@ pkgs <- c("GSVA", "here", "GSEABase")
 handleRequirements(pkgs)
 
 #------------------ Load dataset and parameters into R environment -------------
-
 # Command Line Arguments
 gsva.obj <- prepareGSVAMatrix(here(arguments$matrix))
 gs       <- getGmt(arguments$gene_signature)

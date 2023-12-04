@@ -30,7 +30,9 @@ main <- function(fpath, subset){
       es.df[[fname]] <- buildESDF(rds.files[i])
       
     }
-    res <- Reduce(cbind, es.df)
+    
+    es.df <- Reduce(cbind, es.df)
+    res <- data.frame("SampleID" = rownames(es.df), es.df)
     
   } else{
     stop("Missing and enrichment score table. Please provide at least one enrichment scroe table to subset!")
@@ -38,7 +40,7 @@ main <- function(fpath, subset){
   
   outfolder <- here::here(fpath)
   write.csv(res, here::here(outfolder, "enrichment_experiment_df.csv"), row.names = F)
-  
+  print("Done!")
 }
 
 #---- Check Packages ----

@@ -1,22 +1,3 @@
-handleRequirements  <- function(pkgs){ # This function checks package requirements and install them if they are missing
-  suppressMessages(if (!require("BiocManager", character.only = TRUE)) { # First check via R BioConductior
-    install.packages("BiocManager")
-    BiocManager::install()
-  } else {
-    ipkgs <- sapply(pkgs, function(...) require(..., character.only = TRUE))
-    if (any(!ipkgs)) {
-      BiocManager::install(pkgs[!ipkgs])
-      install.packages(pkgs[!ipkgs])
-    } else {
-      message("\n\nCool! your machine has everything is needed.\n\n")
-    }
-  })
-  
-  print("Loading required packages...")
-  library(pacman)
-  pacman::p_load(pkgs, install = TRUE, character.only = TRUE) # Check via RCran and other repositories
-  return(pacman::p_loaded()) # Return loaded packages
-}
 prepareGSVAMatrix <- function(m){
 
   fe <- tools::file_ext(m)
@@ -78,18 +59,12 @@ gs       <- getGmt(arguments$gene_signature)
 verbose  <- as.integer(arguments$verbose)
 
 # Local Arguments
-# m   <- "E:/R-development/ssGSEA/medusa150/MEDUSA150_FPKM.csv"
-# gmt <- "E:/R-development/ssGSEA/quickstart/db/h.all.v7.0.symbols.gmt"
-# gsva.obj <- prepareGSVAMatrix(m)
-# msigdb <- "E:/GitHubRepos/ssGSEA2/db/msigdb"
-
 start_time <- Sys.time()
 ES <- gsva(gsva.obj$x, gs, method = "ssgsea", verbose = T)
 
-
 exp.name <- tools::file_path_sans_ext(basename((arguments$gene_signature)))
-outdir <- here(dirname(here(arguments$matrix)), 'results')
-dir.create(outdir, showWarnings = T, recursive = T)
+outdir <- here(dirname(arguments$matrix), mesocore::getFileName(arguments$matrix))
+dir.create(outdir, showWarnings = F, recursive = T)
 saveRDS(ES, here(outdir, paste0(exp.name, ".RDS")))
 
 # Timer

@@ -50,7 +50,7 @@ print(arguments)
 
 #---- Package Installation ----
 pkgs <- c("GSVA", "here", "GSEABase")
-handleRequirements(pkgs)
+suppressMessages(mesocore::handleRequirements(pkgs))
 
 #------------------ Load dataset and parameters into R environment -------------
 # Command Line Arguments

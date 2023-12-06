@@ -5,11 +5,8 @@ getCorData <- function(m, sub = NULL){
     return(as.data.frame(t(m)))
   }
 }
-buildESDF <- function(rds.file){
+buildESDF <- function(rds.file, subset){
   enrichment.scores <- readRDS(rds.file)
-  subset <- unlist(strsplit(readLines("/home/jan1/bioinf-tools/pipelines/ssGSVA/sub.txt"), ",\\s*"))
-  
-  # df <- getCorData(enrichment.scores[[fname]], sub = subset)
   
   es.df <- getCorData(enrichment.scores, sub = subset)
   
@@ -21,7 +18,7 @@ getSubset <- function(p, n){
 main <- function(fpath, subset){
   rds.files <- list.files(path = fpath,pattern = "\\.RDS$", full.names = TRUE)
   
-  if(length(rds.files) > 0){
+  if(length(rds.files) > 1){
     enrichment.scores <- list()
     es.df             <- list()
     
@@ -34,12 +31,16 @@ main <- function(fpath, subset){
     es.df <- Reduce(cbind, es.df)
     res <- data.frame("SampleID" = rownames(es.df), es.df)
     
+  } else if(length(rds.files) == 1){
+    es.df <- buildESDF(rds.files[1], subset = NULL)
+    res   <- data.frame("SampleID" = rownames(es.df), es.df)
   } else{
-    stop("Missing and enrichment score table. Please provide at least one enrichment scroe table to subset!")
+    stop("Missing an enrichment score table. Please provide at least one enrichment score table to subset!")
   }
   
   outfolder <- here::here(fpath)
   write.csv(res, here::here(outfolder, "enrichment_experiment_df.csv"), row.names = F)
+  
   print("Done!")
 }
 
@@ -70,7 +71,7 @@ if(!is.null(arguments$subset)){
   subset <- NULL
 }
 
-#---- Using Msig.db.all database ----
+#---- Main ----
 # fpath  <- "/home/jan1/Documents/Cancer_Studies_PhD/Studies/Study_CONFIRM/results/ssGSEA/CONFIR_GROUP_NR"
 # subset <- "/home/jan1/bioinf-tools/pipelines/ssGSVA/sub.txt"
 

@@ -44,6 +44,7 @@ Options:
   -h --help                  Show this screen.
   --matrix=<string>          Specify the path to your gct file.
   --gene_signature=<string>  Path to the gene signature(s).
+  --outfolder=<string>       Path to the results directory.
   --verbose=<value>          If set to T prints all messages [default: F].
   --version                  Show version.
 "-> doc
@@ -54,9 +55,9 @@ print(arguments)
 
 #------------------ Load dataset and parameters into R environment -------------
 # Command Line Arguments
-gsva.obj <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
-gs       <- getGmt(arguments$gene_signature)
-verbose  <- as.integer(arguments$verbose)
+gsva.obj  <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
+gs        <- getGmt(arguments$gene_signature)
+verbose   <- as.integer(arguments$verbose)
 
 # Main
 start_time <- Sys.time()
@@ -65,7 +66,12 @@ gsea.set <- GSVA::ssgseaParam(gsva.obj$x, gs)
 ES <- gsva(gsea.set, verbose = T)
 
 exp.name <- tools::file_path_sans_ext(basename((arguments$gene_signature)))
-outdir <- here(dirname(arguments$matrix), mesocore::getFileName(arguments$matrix))
+if(arguments$outfolder == "NULL"){
+  outdir <- here(dirname(arguments$matrix), mesocore::getFileName(arguments$matrix))
+} else{
+  outdir <- normalizePath(arguments$outfolder, winslash = "/", mustWork = FALSE)
+}
+
 dir.create(outdir, showWarnings = F, recursive = T)
 saveRDS(ES, here(outdir, paste0(exp.name, ".RDS")))
 

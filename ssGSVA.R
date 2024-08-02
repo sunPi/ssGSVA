@@ -1,7 +1,8 @@
+#---- Functions ----
 prepareGSVAMatrix <- function(m){
 
   fe <- tools::file_ext(m)
-
+  
   if(fe == "csv"){
     x <- read.csv(m)
     
@@ -18,7 +19,7 @@ prepareGSVAMatrix <- function(m){
   }
   
   gene.symbols <- x[,1]
-  x   <- as.matrix(x[,-1])
+  x   <- as.matrix((x[,-1]))
   sid <- colnames(x)
   
   rownames(x) <- gene.symbols
@@ -29,7 +30,10 @@ prepareGSVAMatrix <- function(m){
          genes  = gene.symbols)
   )
 }
-library("docopt")
+
+#---- Package Installation ----
+pkgs <- c("GSVA", "here", "GSEABase", "docopt")
+suppressMessages(mesocore::handleRequirements(pkgs))
 
 #---- Header ----
 "Mesothelioma AI Pipeline - ssGSVA Experiments Wrapper
@@ -48,19 +52,17 @@ Options:
 arguments <- docopt(doc, quoted_args = TRUE, help = TRUE, version = 'ssGSVA Wrapper 1.0\n')
 print(arguments)
 
-#---- Package Installation ----
-pkgs <- c("GSVA", "here", "GSEABase")
-suppressMessages(mesocore::handleRequirements(pkgs))
-
 #------------------ Load dataset and parameters into R environment -------------
 # Command Line Arguments
-gsva.obj <- prepareGSVAMatrix(here(arguments$matrix))
+gsva.obj <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
 gs       <- getGmt(arguments$gene_signature)
 verbose  <- as.integer(arguments$verbose)
 
-# Local Arguments
+# Main
 start_time <- Sys.time()
-ES <- gsva(gsva.obj$x, gs, method = "ssgsea", verbose = T)
+
+gsea.set <- GSVA::ssgseaParam(gsva.obj$x, gs)
+ES <- gsva(gsea.set, verbose = T)
 
 exp.name <- tools::file_path_sans_ext(basename((arguments$gene_signature)))
 outdir <- here(dirname(arguments$matrix), mesocore::getFileName(arguments$matrix))

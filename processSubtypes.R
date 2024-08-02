@@ -24,7 +24,7 @@ main <- function(fpath, subset){
     
     for(i in seq_along(rds.files)){
       fname          <- mesocore::getFileName(rds.files[i])
-      es.df[[fname]] <- buildESDF(rds.files[i])
+      es.df[[fname]] <- buildESDF(rds.files[i], subset = subset)
       
     }
     
@@ -32,7 +32,12 @@ main <- function(fpath, subset){
     res <- data.frame("SampleID" = rownames(es.df), es.df)
     
   } else if(length(rds.files) == 1){
-    es.df <- buildESDF(rds.files[1], subset = NULL)
+    if(!is.null(subset)){
+      es.df <- buildESDF(rds.files[1], subset = subset)
+    } else{
+      es.df <- buildESDF(rds.files[1], subset = NULL)
+    }
+    
     res   <- data.frame("SampleID" = rownames(es.df), es.df)
   } else{
     stop("Missing an enrichment score table. Please provide at least one enrichment score table to subset!")
@@ -63,16 +68,15 @@ Options:
 arguments <- docopt(doc, quoted_args = TRUE, help = TRUE)
 print(arguments)
 
-fpath <- arguments$enrichment_scores
+fpath <- normalizePath(arguments$enrichment_scores, winslash = "/", mustWork = FALSE)
 
-if(!is.null(arguments$subset)){
-  subset            <- unlist(strsplit(readLines(arguments$subset), ",\\s*"))
-} else{
+if(arguments$subset == "NULL"){
   subset <- NULL
+} else{
+  subset <- unlist(strsplit(readLines(arguments$subset), ",\\s*"))
 }
 
-#---- Main ----
-# fpath  <- "/home/jan1/Documents/Cancer_Studies_PhD/Studies/Study_CONFIRM/results/ssGSEA/CONFIR_GROUP_NR"
-# subset <- "/home/jan1/bioinf-tools/pipelines/ssGSVA/sub.txt"
 
+#---- Main ----
 main(fpath, subset)
+

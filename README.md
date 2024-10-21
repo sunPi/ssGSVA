@@ -10,4 +10,9 @@ Usage: ssGSEA_quickstart.R [options] <br>
           --matrix=&lt;string&gt;                  Specify the path to your gene expression matrix (counts, FPKM, etc). <br>
           --gene_signature=&lt;string&gt;          Path to the gene signature(s). <br>
           --verbose=&lt;value&gt;                  If set to T prints all messages [default: F]. <br>
-          --version                          ssGSVA Wrapper 1.0. </pre><br>
+          --version                          ssGSVA Wrapper 1.0. </pre><be>
+
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.

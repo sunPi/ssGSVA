@@ -12,7 +12,7 @@ prepareGSVAMatrix <- function(m){
       install.packages("readxl")
       library(readxl)
     }
-    x <- read_excel(fe)
+    x <- read_excel(m)
     
   } else {
     stop("Unsupported file type.")
@@ -57,12 +57,12 @@ print(arguments)
 # Command Line Arguments
 gsva.obj  <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
 gs        <- getGmt(arguments$gene_signature)
-verbose   <- as.integer(arguments$verbose)
+# verbose   <- as.integer(arguments$verbose)
 
 # Main
 start_time <- Sys.time()
 
-gsea.set <- GSVA::ssgseaParam(gsva.obj$x, gs)
+gsea.set <- ssgseaParam(gsva.obj$x, gs)
 ES <- gsva(gsea.set, verbose = T)
 
 exp.name <- tools::file_path_sans_ext(basename((arguments$gene_signature)))

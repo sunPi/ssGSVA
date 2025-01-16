@@ -30,6 +30,15 @@ prepareGSVAMatrix <- function(m){
          genes  = gene.symbols)
   )
 }
+transform.ES <- function(ES){
+  res <- as.data.frame(ES)
+  res <- tibble::rownames_to_column(res, "Pathway_Name")
+  res <- as.data.frame(t(res))
+  colnames(res) <- res[1,]
+  res <- res[-1,]
+  res <- as.data.frame(tibble::rownames_to_column(res, "SampleID"))
+  return(res)
+}
 
 #---- Package Installation ----
 pkgs <- c("GSVA", "here", "GSEABase", "docopt")
@@ -58,6 +67,8 @@ print(arguments)
 gsva.obj  <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
 gs        <- getGmt(arguments$gene_signature)
 # verbose   <- as.integer(arguments$verbose)
+# gsva.obj <- prepareGSVAMatrix("/home/jr453/Documents/Cancer_Studies_PhD/Studies/Study_PARP/datasets/MEDUSA/RNAseq/M126_TPMpc.csv")
+# gs        <- getGmt("~/bioinf-tools/db/molsigs/msigdb/h.all.v2024.1.Hs.symbols.gmt")
 
 # Main
 start_time <- Sys.time()
@@ -74,6 +85,10 @@ if(arguments$outfolder == "NULL"){
 
 dir.create(outdir, showWarnings = F, recursive = T)
 saveRDS(ES, here(outdir, paste0(exp.name, ".RDS")))
+
+ES.t <- transform.ES(ES)
+
+write.csv(ES.t, here(outdir, paste0(exp.name, ".csv")), row.names = F)
 
 # Timer
 end_time <- Sys.time()

@@ -1,4 +1,17 @@
 #---- Functions ----
+handleRequirements <- function(pkgs){
+  ipkgs <- sapply(pkgs, function(...) require(..., character.only = TRUE))
+  if (any(!ipkgs)) {
+    BiocManager::install(pkgs[!ipkgs])
+    install.packages(pkgs[!ipkgs])
+  }
+  else {
+    message("\n\nCool! your machine has everything is needed.\n\n")
+  }
+  print("Loading required packages...")
+  pacman::p_load(pkgs, install = TRUE, character.only = TRUE)
+  return(pacman::p_loaded())
+}
 prepareGSVAMatrix <- function(m){
 
   fe <- tools::file_ext(m)
@@ -41,8 +54,9 @@ transform.ES <- function(ES){
 }
 
 #---- Package Installation ----
+install.packages("pacman")
 pkgs <- c("GSVA", "here", "GSEABase", "docopt")
-suppressMessages(mesocore::handleRequirements(pkgs))
+suppressMessages(handleRequirements(pkgs))
 
 #---- Header ----
 "Mesothelioma AI Pipeline - ssGSVA Experiments Wrapper
@@ -66,10 +80,7 @@ print(arguments)
 # Command Line Arguments
 gsva.obj  <- prepareGSVAMatrix(normalizePath(arguments$matrix, winslash = "/", mustWork = FALSE))
 gs        <- getGmt(arguments$gene_signature)
-# verbose   <- as.integer(arguments$verbose)
-# gsva.obj <- prepareGSVAMatrix("/home/jr453/Documents/Cancer_Studies_PhD/Studies/Study_PARP/datasets/MEDUSA/RNAseq/M126_TPMpc.csv")
-# gs        <- getGmt("~/bioinf-tools/db/molsigs/msigdb/h.all.v2024.1.Hs.symbols.gmt")
-
+  
 # Main
 start_time <- Sys.time()
 

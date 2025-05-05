@@ -84,7 +84,7 @@ gs        <- getGmt(arguments$gene_signature)
 # Main
 start_time <- Sys.time()
 
-gsea.set <- ssgseaParam(gsva.obj$x, gs)
+gsea.set <- ssgseaParam(gsva.obj$x, gs, normalize = T)
 ES <- gsva(gsea.set, verbose = T)
 
 exp.name <- tools::file_path_sans_ext(basename((arguments$gene_signature)))
